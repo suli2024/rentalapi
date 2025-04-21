@@ -68,15 +68,19 @@ const RentalController = {
         const { userId, startDate, endDate } = req.body
         const overlappingRental = await Rental.findAll({
             where: {
-                userId: userId,
-                startDate: {
-                    [Op.lte]: endDate
-                },
-                endDate: {
-                    [Op.gte]: startDate
-                }
-            }
-            
+                [Op.and]: [ 
+                    {                    
+                        startDate: {
+                            [Op.lte]: endDate
+                        }    
+                    }, 
+                    {
+                        endDate: {
+                            [Op.gte]: startDate
+                        }
+                    }
+                ]
+            }          
         })
         if(overlappingRental.length > 0) {
             throw new Error('Hiba! Átfedés a foglalásban!')

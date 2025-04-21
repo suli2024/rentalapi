@@ -30,12 +30,16 @@ const Rental = sequelize.define('rental', {
                 if(this.startDate && value) {
                     const startDate = new Date(this.startDate)
                     const endDate = new Date(value)
-                    const diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24))
 
-                    if(diffInDays < 3) {
-                        throw new Error('Hiba! A bérlés időtartalma legalább 3 nap')
+                    startDate.setHours(0, 0, 0, 0)
+                    endDate.setHours(0, 0, 0, 0)
+
+                    const diffInDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24))
+
+                    if(diffInDays < 2) {
+                        throw new Error(`Hiba! A bérlés időtartalma legalább 3 nap. ${diffInDays} nap ${endDate}`)
                     }
-                    if(diffInDays > 21) {
+                    if(diffInDays > 20) {
                         throw new Error('Hiba! A bérlés maximum 21 nap')
                     }
                 }
