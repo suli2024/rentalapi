@@ -18,7 +18,19 @@ const Rental = sequelize.define('rental', {
         type: DataTypes.DATE, 
         allowNull: true,
         validate: {
-            isDate: true
+            isDate: true,
+            isTodayOrFuture: function(value) {
+                const today = new Date();
+                today.setDate(today.getDate() + 1);
+                today.setHours(0, 0, 0, 0);
+
+                const startDate = new Date(value);
+                startDate.setHours(0, 0, 0, 0);
+
+                if (isNaN(startDate.getTime()) || startDate.getTime() < today.getTime()) {
+                    throw new Error('A kezdő dátum nem lehet korábbi a mai napnál.');
+                }
+            },            
         }
     },
     endDate: { 
