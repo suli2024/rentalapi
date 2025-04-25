@@ -56,11 +56,15 @@ const RentalController = {
         try {
             await RentalController.tryCreate(req, res)
         }catch(error) {
-            res.status(500)
+            if(error.message.includes('Átfedés')) {
+                res.status(400)
+            }else {
+                res.status(500)
+            }
+            
             res.json({
                 success: false,
-                message: 'Error! The query is failed!',
-                error: error.message
+                message: error.message
             })
         }
     },
